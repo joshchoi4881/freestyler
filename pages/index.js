@@ -1,36 +1,38 @@
 import { useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
-import buildspaceLogo from "../assets/buildspace-logo.png";
+
+const DEFAULT_INPUT = "";
+const DEFAULT_OUTPUT = "";
+const DEFAULT_IS_LOADING = false;
 
 const Home = () => {
-  const [userInput, setUserInput] = useState("");
-  const [apiOutput, setApiOutput] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [input, setInput] = useState(DEFAULT_INPUT);
+  const [output, setOutput] = useState(DEFAULT_OUTPUT);
+  const [isLoading, setIsLoading] = useState(DEFAULT_IS_LOADING);
 
-  const callGenerateEndpoint = async () => {
-    setIsGenerating(true);
-    const response = await fetch("/api/generate", {
+  const generate = async () => {
+    setIsLoading(true);
+    const res = await fetch("/api/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userInput }),
+      body: JSON.stringify({ input }),
     });
-    const data = await response.json();
+    const data = await res.json();
     const { output } = data;
-    setApiOutput(`${output.text}`);
-    setIsGenerating(false);
+    setOutput(`${output.text}`);
+    setIsLoading(false);
   };
 
-  const onUserChangedText = (event) => {
-    setUserInput(event.target.value);
+  const handleInputChange = (e) => {
+    setInput(e.target.value);
   };
 
   return (
     <div className="root">
       <Head>
-        <title>GPT-3 Writer | buildspace</title>
+        <title>freestyler</title>
       </Head>
       <div className="container">
         <div className="header">
@@ -44,28 +46,24 @@ const Home = () => {
         <div className="prompt-container">
           <p style={{ color: "white" }}>rapper:</p>
           <textarea
-            className="prompt-box"
+            value={input}
             placeholder="Gordon Ramsay"
-            value={userInput}
-            onChange={onUserChangedText}
+            className="prompt-box"
+            onChange={handleInputChange}
           />
           <div className="prompt-buttons">
             <a
               className={
-                isGenerating ? "generate-button loading" : "generate-button"
+                isLoading ? "generate-button loading" : "generate-button"
               }
-              onClick={callGenerateEndpoint}
+              onClick={generate}
             >
               <div className="generate">
-                {isGenerating ? (
-                  <span className="loader"></span>
-                ) : (
-                  <p>Generate</p>
-                )}
+                {isLoading ? <span className="loader"></span> : <p>Generate</p>}
               </div>
             </a>
           </div>
-          {apiOutput && (
+          {output && (
             <div className="output">
               <div className="output-header-container">
                 <div className="output-header">
@@ -73,23 +71,11 @@ const Home = () => {
                 </div>
               </div>
               <div className="output-content">
-                <p>{apiOutput}</p>
+                <p>{output}</p>
               </div>
             </div>
           )}
         </div>
-      </div>
-      <div className="badge-container grow">
-        <a
-          href="https://buildspace.so/builds/ai-writer"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <div className="badge">
-            <Image src={buildspaceLogo} alt="buildspace logo" />
-            <p>build with buildspace</p>
-          </div>
-        </a>
       </div>
     </div>
   );
