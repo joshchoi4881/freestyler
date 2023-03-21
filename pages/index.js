@@ -59,7 +59,7 @@ const Home = () => {
               onClick={generate}
             >
               <div className="generate">
-                {isLoading ? <span className="loader"></span> : <p>Generate</p>}
+                {isLoading ? <span className="loader"></span> : <p>generate</p>}
               </div>
             </a>
           </div>
@@ -67,7 +67,7 @@ const Home = () => {
             <div className="output">
               <div className="output-header-container">
                 <div className="output-header">
-                  <h3>Output</h3>
+                  <h3>output</h3>
                 </div>
               </div>
               <div className="output-content">
