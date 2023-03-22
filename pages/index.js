@@ -76,6 +76,10 @@ const Home = () => {
             </div>
           )}
         </div>
+        <p style={{ color: "white" }}>
+          download the chrome extension @
+          https://github.com/joshchoi4881/freestyler-extension
+        </p>
       </div>
     </div>
   );
